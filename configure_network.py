@@ -4,23 +4,23 @@ import ctypes
 import sys
 import time
 
-INTERFACE_NAME = "Wi-Fi"  # Alterar para o nome correto caso não seja "Wi-Fi"
+INTERFACE_NAME = "Wi-Fi"  # Change to the correct name if it's not "Wi-Fi"
 
 def is_admin():
-    """Verifica se o script está sendo executado como administrador."""
+    """Checks if the script is being run as administrator."""
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
     except:
         return False
 
 def restart_as_admin():
-    """Reinicia o script como administrador."""
+    """Restarts the script as administrator."""
     ctypes.windll.shell32.ShellExecuteW(
         None, "runas", sys.executable, " ".join(sys.argv), None, 1
     )
 
 def set_static_ip():
-    print(f"Configurando IP estático para a interface: {INTERFACE_NAME}...")
+    print(f"Configuring static IP for interface: {INTERFACE_NAME}...")
     try:
         subprocess.run([
             "netsh", "interface", "ip", "set", "address",
@@ -28,7 +28,7 @@ def set_static_ip():
             "source=static",
             "addr=[your ip]",
             "mask=[your mask]",
-            "gateway=1[your gateway]"
+            "gateway=[your gateway]"
         ], check=True)
 
         time.sleep(2)
@@ -47,12 +47,12 @@ def set_static_ip():
             "index=2"
         ], check=True)
 
-        print("Configuração de IP estático concluída com sucesso.")
+        print("Static IP configuration completed successfully.")
     except subprocess.CalledProcessError as e:
-        print(f"Erro ao configurar IP estático: {e}")
+        print(f"Error configuring static IP: {e}")
 
 def set_dynamic_ip():
-    print(f"Configurando IP dinâmico para a interface: {INTERFACE_NAME}...")
+    print(f"Configuring dynamic IP for interface: {INTERFACE_NAME}...")
     try:
         subprocess.run([
             "netsh", "interface", "ip", "set", "address",
@@ -66,31 +66,31 @@ def set_dynamic_ip():
             "source=dhcp"
         ], check=True)
         
-        print("Configuração de IP dinâmico concluída com sucesso.")
+        print("Dynamic IP configuration completed successfully.")
     except subprocess.CalledProcessError as e:
-        print(f"Erro ao configurar IP dinâmico: {e}")
+        print(f"Error configuring dynamic IP: {e}")
 
 def main():
     if not is_admin():
-        print("Este script precisa de privilégios de administrador. Reiniciando...")
+        print("This script requires administrator privileges. Restarting...")
         restart_as_admin()
         sys.exit()
     
-    print("=== Gerenciador de Configurações de Rede ===")
-    print("1. Configurar IP e DNS automaticamente")
-    print("2. Configurar IP e DNS manualmente")
+    print("=== Network Configuration Manager ===")
+    print("1. Configure IP and DNS automatically")
+    print("2. Configure IP and DNS manually")
     print("============================================")
     
     try:
-        choice = int(input("Escolha uma opção (1 ou 2): "))
+        choice = int(input("Choose an option (1 or 2): "))
         if choice == 1:
             set_dynamic_ip()
         elif choice == 2:
             set_static_ip()
         else:
-            print("Opção inválida. Por favor, escolha 1 ou 2.")
+            print("Invalid option. Please choose 1 or 2.")
     except ValueError:
-        print("Entrada inválida. Por favor, insira um número.")
+        print("Invalid input. Please enter a number.")
 
 if __name__ == "__main__":
     main()
