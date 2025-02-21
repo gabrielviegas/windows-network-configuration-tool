@@ -1,6 +1,4 @@
-# windows-network-configuration-tool
-
-# network-config
+# Windows network configuration tool
 
 Command-line tool in Python to configure static or dynamic IP and DNS on Windows network interfaces.
 
